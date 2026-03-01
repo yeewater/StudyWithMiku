@@ -31,6 +31,14 @@ export const recommendPlaylists = [
     playlistId: '1158585431',
     tags: ['古典', '纯音乐']
   },
+  {
+    id: '5',
+    name: 'Asleep Above Creatures',
+    desc: 'kksk',
+    platform: 'neteas',
+    playlistId: '17761216212',
+    tags: ['kksk', '纯音乐']
+  }
 ]
 
 export const LATEST_PLAYLIST_VERSION = String(recommendPlaylists.length)
