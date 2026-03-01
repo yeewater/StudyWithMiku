@@ -24,8 +24,8 @@
     </transition>
     <div class="overlay"></div>
     <div class="content" :class="{ hidden: !showControls }">
-      <h1 class="title">Study With Miku</h1>
-      <p class="subtitle">Love by SHSHOUSE</p>
+      <h1 class="title">Study Room</h1>
+      <p class="subtitle">bluwater8443</p>
     </div>
     <button class="switch-video-btn" @click="switchVideo" :class="{ hidden: !showControls }" @mouseenter="onUIMouseEnter" @mouseleave="onUIMouseLeave" @touchstart="onUITouchStart" @touchend="onUITouchEnd">
       切换
@@ -118,7 +118,7 @@ const onUITouchEnd = () => {
 
 const videoRef = ref(null)
 
-const isR2Domain = window.location.hostname === 'study.mikugame.icu'
+const isR2Domain = window.location。hostname === 'study.mikugame.icu'
 const R2_BASE_URL = 'https://studycdn.mikugame.icu/mp4'
 
 const video2Name = isMobile ? '2_H264.mp4' : '2.mp4'
