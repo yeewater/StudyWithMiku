@@ -38,6 +38,14 @@ export const recommendPlaylists = [
     platform: 'neteas',
     playlistId: '17761216212',
     tags: ['kksk', '纯音乐']
+  },
+  {
+    id: '6',
+    name: 'Lofi合集',
+    desc: '杂',
+    platform: 'neteas',
+    playlistId: '17802957004',
+    tags: ['Lofi', '纯音乐']
   }
 ]
 
