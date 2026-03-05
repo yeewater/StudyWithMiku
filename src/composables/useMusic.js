@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { fetchPlaylist, getStoredConfig, saveConfig, DEFAULT_PLAYLIST_ID } from '../services/meting.js'
+import { localSongsData } from '../data/localSongs.js'
 
 const songs = ref([])
 const loading = ref(false)
@@ -9,7 +10,8 @@ const platform = ref(localStorage.getItem('music_platform') || 'netease')
 
 const PLATFORMS = [
   { value: 'netease', label: '网易云' },
-  { value: 'tencent', label: 'QQ音乐' }
+  { value: 'tencent', label: 'QQ音乐' },
+  { value: 'local', label: '本地音乐' }
 ]
 
 export const useMusic = () => {
@@ -17,7 +19,17 @@ export const useMusic = () => {
   const loadMetingSongs = async (platform, id) => {
     loading.value = true
     try {
-      const playlist = await fetchPlaylist(platform, id)
+      let playlist
+      if (platform === 'local') {
+        playlist = localSongsData[id] || []
+      } else {
+        playlist = await fetchPlaylist(platform, id)
+        
+        if (id === '8894040639' && platform === 'netease') {
+          const specialMusicSongs = localSongsData.special_music || []
+          playlist = [...playlist, ...specialMusicSongs]
+        }
+      }
       if (playlist.length > 0) {
         songs.value = playlist
         saveConfig(platform, id)
