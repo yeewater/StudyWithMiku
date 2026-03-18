@@ -32,8 +32,8 @@ export function useStudyAuth() {
             try {
                 const payloadB64 = match[1].split('.')[1]
                 const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')))
-                if (payload.sub) {
-                    username.value = payload.sub.slice(0, 8)
+                if (payload.username || payload.sub) {
+                    username.value = payload.username || payload.sub.slice(0, 8)
                     localStorage.setItem(STUDY_USER_KEY, username.value)
                 }
             } catch { }
