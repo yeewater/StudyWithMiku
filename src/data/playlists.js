@@ -4,7 +4,14 @@ export const recommendPlaylists = [
     desc: '♦',
     platform: 'netease',
     playlistId: '8894040639',
-    tags: ['神秘','有Miku','较慢','平静']
+    tags: ['神秘','有Miku','by 酸']
+  },
+  {
+    name: '东方精选集',
+    desc: '♦',
+    platform: 'netease',
+    playlistId: '8891884744',
+    tags: ['东方！','by 酸']
   },
   {
     name: '【学习向】Galgame纯音乐',
@@ -46,7 +53,7 @@ export const recommendPlaylists = [
     desc: '♦',
     platform: 'netease',
     playlistId: '5438089118',
-    tags: ['Kawaii','Snails house','True Music']
+    tags: []
   },
 ]
 
