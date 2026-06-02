@@ -42,6 +42,13 @@ export const recommendPlaylists = [
     tags: ['轻音乐','白噪音','By 永生']
   },
   {
+    name: '星落夜',
+    desc: '听星光落进深海的声音',
+    platform: 'netease',
+    playlistId: '18010565030',
+    tags: ['温柔','空灵','By 洛星希']
+  },
+  {
     name: '酸の心',
     desc: '♦',
     platform: 'netease',
