@@ -185,6 +185,7 @@ export const useCrossfade = () => {
     }
 
     const armHandoff = () => {
+      if (!handoffAudio) return
       activeAudio = ap.audio
       setPlayerVolume(ap, 0, 8000)
       try {
@@ -338,7 +339,7 @@ export const useCrossfade = () => {
 
   const fadeMusicOut = (ap, durationInSec = 2, options = {}) => {
     if (!ap || ap.audio.paused) return
-    if (isCrossfading) cleanup(ap)
+    if (isCrossfading || handoffAudio) cleanup(ap)
     if (fadeAnimationId) { cancelAnimationFrame(fadeAnimationId); fadeAnimationId = null }
     const origVol = ap.audio.volume
     ap._fadeLastVolume = origVol
