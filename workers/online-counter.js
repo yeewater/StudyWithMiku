@@ -30,7 +30,7 @@ const getRoomIdFromUrl = (url) => normalizeRoomId(url.searchParams.get('roomId')
 
 const sanitizeUsername = (value) => String(value || '').trim().slice(0, MAX_USERNAME_LENGTH)
 
-const STICKER_MESSAGE_PATTERN = /^\[sticker:(?:[1-9]|10)\]$/
+const STICKER_MESSAGE_PATTERN = /^\[sticker:(?:1[0-5]|[1-9])\]$/
 const isStickerMessage = (value) => STICKER_MESSAGE_PATTERN.test(String(value || ''))
 
 const sanitizeContent = (value) => {
