@@ -17,17 +17,21 @@ export const STICKER_FILES = {
   15: 'gif',
 }
 export const STICKER_IDS = Object.keys(STICKER_FILES).map(Number).sort((a, b) => a - b)
-export const STICKER_PATTERN = /^\[sticker:(?:1[0-5]|[1-9])\]$/
+export const STICKER_PATTERN = /^\[sticker:(1[0-5]|[1-9])\]$/
 export const getStickerId = (content) => {
   if (typeof content !== 'string') return null
   const match = content.match(STICKER_PATTERN)
-  return match ? Number(match[1]) : null
+  if (!match) return null
+  const id = Number(match[1])
+  return Number.isFinite(id) ? id : null
 }
 export const buildStickerMessage = (id) => {
-  if (!STICKER_FILES[id]) return ''
-  return `[sticker:${id}]`
+  const num = Number(id)
+  if (!Number.isFinite(num) || !STICKER_FILES[num]) return ''
+  return `[sticker:${num}]`
 }
 export const getStickerUrl = (id) => {
-  if (!STICKER_FILES[id]) return ''
-  return `${STICKER_BASE_URL}/${id}.${STICKER_FILES[id]}`
+  const num = Number(id)
+  if (!Number.isFinite(num) || !STICKER_FILES[num]) return ''
+  return `${STICKER_BASE_URL}/${num}.${STICKER_FILES[num]}`
 }
