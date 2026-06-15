@@ -61,6 +61,7 @@
           <div class="chat-message-bubble">
             <div class="chat-message-meta">
               <span class="chat-message-name">{{ resolveUsername(group.messages[0]) || '游客' }}</span>
+              <span v-if="group.messages[0].location" class="chat-message-location">{{ group.messages[0].location }}</span>
               <span class="chat-message-time">{{ formatChatTime(group.messages[0].createdAt) }}</span>
             </div>
             <div
@@ -157,6 +158,9 @@
 <script setup>
 import { ref, reactive, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { STICKER_IDS, getStickerId, getStickerUrl, buildStickerMessage } from '../data/stickers.js'
+import { useGeoLocation } from '../composables/useGeoLocation.js'
+
+const { location: geoLocation, detect: detectGeo } = useGeoLocation()
 
 const props = defineProps({
   messages: { type: Array, default: () => [] },
@@ -388,7 +392,7 @@ const submit = () => {
   }
   const content = chatInput.value.trim()
   if (!content) return
-  if (props.sendMessage(content)) {
+  if (props.sendMessage(content, geoLocation.value)) {
     chatInput.value = ''
     autoScrollPending.value = true
     unreadCount.value = 0
@@ -412,7 +416,7 @@ const sendSticker = (id) => {
   if (!props.isConnected || !props.isAuthenticated) return
   const payload = buildStickerMessage(id)
   if (!payload) return
-  if (props.sendMessage(payload)) {
+  if (props.sendMessage(payload, geoLocation.value)) {
     autoScrollPending.value = true
     unreadCount.value = 0
     scrollChatToBottom()
@@ -434,6 +438,7 @@ const onDocumentClick = (e) => {
 onMounted(() => {
   restoreScrollPosition()
   document.addEventListener('click', onDocumentClick)
+  detectGeo()
 })
 
 onUnmounted(() => {
@@ -723,6 +728,14 @@ defineExpose({ scrollChatToBottom, jumpToBottom })
   text-overflow: ellipsis;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.78);
+}
+.chat-message-location {
+  flex-shrink: 0;
+  padding: 0.06rem 0.3rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.66rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 .chat-message-time { flex-shrink: 0; }
 .chat-message-item {

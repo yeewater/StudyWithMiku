@@ -2,6 +2,7 @@ const DEFAULT_ROOM_ID = 'global'
 const MAX_ROOM_ID_LENGTH = 64
 const MAX_USERNAME_LENGTH = 40
 const MAX_MESSAGE_LENGTH = 500
+const MAX_LOCATION_LENGTH = 20
 const HISTORY_PAGE_SIZE = 50
 const HISTORY_PAGE_LIMIT = 100
 const CHAT_THROTTLE_MS = 1500
@@ -380,12 +381,14 @@ export class OnlineCounter {
     }
 
     const username = meta.username || sanitizeUsername(data.username) || '游客'
+    const location = String(data.location || '').trim().slice(0, MAX_LOCATION_LENGTH)
     const chatMessage = {
       id: crypto.randomUUID(),
       roomId: meta.roomId,
       userId: meta.authenticated ? meta.userId : '',
       username,
       content,
+      location,
       createdAt: new Date(now).toISOString(),
     }
 
@@ -462,7 +465,7 @@ export class OnlineCounter {
       const stmt = before
         ? this.env.CHAT_DB
             .prepare(`
-              SELECT id, room_id, user_id, username, content, created_at
+              SELECT id, room_id, user_id, username, content, created_at, location
               FROM chat_messages
               WHERE room_id = ? AND created_at < ?
               ORDER BY created_at DESC
@@ -471,7 +474,7 @@ export class OnlineCounter {
             .bind(roomId, before, fetchLimit)
         : this.env.CHAT_DB
             .prepare(`
-              SELECT id, room_id, user_id, username, content, created_at
+              SELECT id, room_id, user_id, username, content, created_at, location
               FROM chat_messages
               WHERE room_id = ?
               ORDER BY created_at DESC
@@ -491,6 +494,7 @@ export class OnlineCounter {
           username: String(row.username || ''),
           content: String(row.content || ''),
           createdAt: new Date(Number(row.created_at)).toISOString(),
+          location: String(row.location || ''),
         })),
         hasMore,
       }
@@ -514,10 +518,10 @@ export class OnlineCounter {
           .bind(message.roomId, message.roomId, createdAt, createdAt),
         this.env.CHAT_DB
           .prepare(`
-            INSERT INTO chat_messages (id, room_id, user_id, username, content, created_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO chat_messages (id, room_id, user_id, username, content, created_at, location)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
           `)
-          .bind(message.id, message.roomId, message.userId, message.username, message.content, createdAt),
+          .bind(message.id, message.roomId, message.userId, message.username, message.content, createdAt, message.location || ''),
       ])
     } catch (err) {
       console.error('D1 save error:', err)

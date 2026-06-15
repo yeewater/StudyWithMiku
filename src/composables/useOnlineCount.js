@@ -12,6 +12,7 @@ const normalizeChatMessage = (message) => {
     username: String(message.username || ''),
     content: String(message.content || ''),
     createdAt: String(message.createdAt || new Date().toISOString()),
+    location: String(message.location || ''),
   }
 }
 
@@ -99,11 +100,11 @@ export function useOnlineCount(wsUrl, options = {}) {
     messages.value = dedupAndSort([...messages.value, normalized])
   }
 
-  const sendChatMessage = (content) => {
+  const sendChatMessage = (content, location = '') => {
     const normalized = String(content || '').trim()
     if (!normalized) return false
     chatError.value = ''
-    return sendMessage({ type: 'chat', content: normalized })
+    return sendMessage({ type: 'chat', content: normalized, location })
   }
 
   const connect = () => {
