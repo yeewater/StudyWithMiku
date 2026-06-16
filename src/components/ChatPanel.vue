@@ -61,7 +61,7 @@
           <div class="chat-message-bubble">
             <div class="chat-message-meta">
               <span class="chat-message-name">{{ resolveUsername(group.messages[0]) || '游客' }}</span>
-              <span v-if="group.messages[0].location" class="chat-message-location">{{ group.messages[0].location }}</span>
+              <span v-if="getGroupLocation(group.messages)" class="chat-message-location">{{ getGroupLocation(group.messages) }}</span>
               <span class="chat-message-time">{{ formatChatTime(group.messages[0].createdAt) }}</span>
             </div>
             <div
@@ -203,7 +203,6 @@ const avatarLoadFailures = reactive(new Set())
 const showStickerPanel = ref(false)
 
 const renderStickerId = (content) => getStickerId(content)
-const GROUP_GAP_MS = 2 * 60 * 1000
 
 const groupedMessages = computed(() => {
   const list = props.messages
@@ -215,15 +214,8 @@ const groupedMessages = computed(() => {
     const bId = b.userId || b.username || ''
     return aId && bId && aId === bId
   }
-  const withinGap = (a, b) => {
-    if (!a || !b) return false
-    const ta = new Date(a.createdAt).getTime()
-    const tb = new Date(b.createdAt).getTime()
-    if (!Number.isFinite(ta) || !Number.isFinite(tb)) return false
-    return Math.abs(tb - ta) <= GROUP_GAP_MS
-  }
   for (const message of list) {
-    if (current && sameUser(current.messages[current.messages.length - 1], message) && withinGap(current.messages[current.messages.length - 1], message)) {
+    if (current && sameUser(current.messages[current.messages.length - 1], message)) {
       current.messages.push(message)
     } else {
       current = { key: message.id, messages: [message] }
@@ -232,6 +224,13 @@ const groupedMessages = computed(() => {
   }
   return groups
 })
+
+const getGroupLocation = (messages) => {
+  for (const m of messages) {
+    if (m.location) return m.location
+  }
+  return ''
+}
 
 const showJumpToBottom = computed(() => isReady.value && !autoScrollPending.value)
 
