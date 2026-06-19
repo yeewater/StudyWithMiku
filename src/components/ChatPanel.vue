@@ -89,12 +89,12 @@
           type="button"
           class="chat-jump-to-bottom"
           @click="jumpToBottom"
-          aria-label="回到最新消息"
+          :aria-label="unreadCount > 0 ? `${Math.min(unreadCount, 99)} 条新消息` : '回到最新消息'"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg v-if="!unreadCount" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-          <span>{{ unreadCount > 0 ? `${Math.min(unreadCount, 99)} 条新消息` : '回到底部' }}</span>
+          <span v-else class="chat-jump-badge">{{ Math.min(unreadCount, 99) }}</span>
         </button>
       </transition>
     </div>
@@ -750,27 +750,32 @@ defineExpose({ scrollChatToBottom, jumpToBottom })
 }
 .chat-jump-to-bottom {
   position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
+  right: 8px;
+  bottom: 8px;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
   color: #fff;
   background: rgba(57, 197, 187, 0.88);
   border: 1px solid rgba(57, 197, 187, 0.95);
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
   transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
   z-index: 2;
 }
-.chat-jump-to-bottom:hover { background: rgba(57, 197, 187, 1); transform: translateX(-50%) translateY(-1px); }
+.chat-jump-to-bottom:hover { background: rgba(57, 197, 187, 1); transform: translateY(-1px); }
+.chat-jump-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+}
 .chat-jump-fade-enter-active, .chat-jump-fade-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
-.chat-jump-fade-enter-from, .chat-jump-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(6px); }
-.chat-jump-fade-enter-to, .chat-jump-fade-leave-from { opacity: 1; transform: translateX(-50%) translateY(0); }
+.chat-jump-fade-enter-from, .chat-jump-fade-leave-to { opacity: 0; transform: translateY(6px); }
+.chat-jump-fade-enter-to, .chat-jump-fade-leave-from { opacity: 1; transform: translateY(0); }
 .chat-error {
   padding: 0.55rem 0.7rem;
   border-radius: 8px;
